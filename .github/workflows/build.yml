@@ -1,0 +1,35 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24'
+
+    - name: Make build script executable
+      run: chmod +x build.sh
+
+    - name: Run build script
+      run: ./build.sh
+
+    - name: Upload Debian package as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: shitkey-debian-package
+        path: shitkey_*.deb
+        retention-days: 1
